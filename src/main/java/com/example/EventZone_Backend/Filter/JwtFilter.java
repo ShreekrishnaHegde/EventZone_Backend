@@ -1,7 +1,7 @@
 package com.example.EventZone_Backend.Filter;
 
 import com.example.EventZone_Backend.utilis.JwtUtil;
-import io.jsonwebtoken.io.IOException;
+import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

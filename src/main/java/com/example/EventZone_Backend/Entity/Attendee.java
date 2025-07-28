@@ -5,12 +5,13 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "User")
+@Document(collection = "Attendee")
 @Data
-public class User {
+public class Attendee {
     @Id
-    private ObjectId userUserId;
+    private ObjectId AttendeeUserId;
 
-    private String userEmail;
-    private String userPassword;
+    private String AttendeeEmail;
+    private String AttendeePassword;
+    private String role = "ROLE_ATTENDEE";
 }

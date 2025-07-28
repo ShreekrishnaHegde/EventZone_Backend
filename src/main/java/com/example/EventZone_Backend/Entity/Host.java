@@ -13,4 +13,5 @@ public class Host {
 
     private String hostEmail;
     private String hostPassword;
+    private String role = "ROLE_HOST";
 }
