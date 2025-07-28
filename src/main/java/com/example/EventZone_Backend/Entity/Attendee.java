@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Attendee {
     @Id
-    private ObjectId AttendeeUserId;
+    private ObjectId id;
 
-    private String AttendeeEmail;
-    private String AttendeePassword;
+    private String email;
+    private String password;
     private String role = "ROLE_ATTENDEE";
 }

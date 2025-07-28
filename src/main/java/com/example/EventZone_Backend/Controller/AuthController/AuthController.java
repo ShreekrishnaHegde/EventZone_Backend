@@ -41,17 +41,17 @@ public class AuthController {
     @PostMapping("/signup/attendee")
     public ResponseEntity<?> registerAttendee(@RequestBody AttendeeSignUpRequest attendeeSignUpRequest){
         Attendee attendee=attendeeService.register(attendeeSignUpRequest);
-        UserDetails userDetails=userDetailsService.loadUserByUsername(attendee.getAttendeeEmail());
+        UserDetails userDetails=userDetailsService.loadUserByUsername(attendee.getEmail());
         String token=jwtUtil.generateToken(userDetails.getUsername(),"ATTENDEE");
-        return ResponseEntity.ok(new AuthResponse(token,attendee.getRole(),attendee.getAttendeeEmail()));
+        return ResponseEntity.ok(new AuthResponse(token,attendee.getRole(),attendee.getEmail()));
     }
 
     @PostMapping("/signup/host")
     public ResponseEntity<?> registerHost(@RequestBody HostSignUpRequest hostSignUpRequest){
         Host host=hostService.register(hostSignUpRequest);
-        UserDetails userDetails=userDetailsService.loadUserByUsername(host.getHostEmail());
+        UserDetails userDetails=userDetailsService.loadUserByUsername(host.getEmail());
         String token=jwtUtil.generateToken(userDetails.getUsername(),"HOST");
-        return ResponseEntity.ok(new AuthResponse(token,host.getRole(),host.getHostEmail()));
+        return ResponseEntity.ok(new AuthResponse(token,host.getRole(),host.getEmail()));
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){

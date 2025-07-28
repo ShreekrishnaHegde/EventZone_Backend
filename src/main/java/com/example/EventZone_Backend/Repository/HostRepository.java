@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HostRepository extends MongoRepository<Host, ObjectId> {
-    Host findByHostEmail(String email);
+    Host findByEmail(String email);
 }

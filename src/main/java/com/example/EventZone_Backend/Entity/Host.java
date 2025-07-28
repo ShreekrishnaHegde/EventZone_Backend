@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Host {
     @Id
-    private ObjectId hostId;
+    private ObjectId id;
 
-    private String hostEmail;
-    private String hostPassword;
+    private String email;
+    private String password;
     private String role = "ROLE_HOST";
 }

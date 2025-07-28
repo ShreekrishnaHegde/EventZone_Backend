@@ -18,8 +18,8 @@ public class AttendeeService {
     //signup
     public Attendee register(AttendeeSignUpRequest request){
         Attendee attendee=new Attendee();
-        attendee.setAttendeeEmail(request.getEmail());
-        attendee.setAttendeePassword(request.getPassword());
+        attendee.setEmail(request.getEmail());
+        attendee.setPassword(request.getPassword());
         return attendeeRepository.save(attendee);
     }
 }

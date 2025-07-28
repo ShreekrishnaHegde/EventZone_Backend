@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AttendeeRepository extends MongoRepository<Attendee, ObjectId> {
-    Attendee findByAttendeeEmail(String Email);
+    Attendee findByEmail(String Email);
 }

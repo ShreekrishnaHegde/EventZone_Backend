@@ -19,8 +19,8 @@ public class HostService {
     //signup
     public Host register(HostSignUpRequest request){
         Host host=new Host();
-        host.setHostEmail(request.getEmail());
-        host.setHostPassword(request.getPassword());
+        host.setEmail(request.getEmail());
+        host.setPassword(request.getPassword());
         return hostRepository.save(host);
     }
 }
