@@ -1,5 +1,6 @@
 package com.example.EventZone_Backend.Controller;
 
+import com.example.EventZone_Backend.DTO.AuthResponse;
 import com.example.EventZone_Backend.Entity.Attendee;
 import com.example.EventZone_Backend.Entity.Host;
 import com.example.EventZone_Backend.Repository.AttendeeRepository;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,11 +52,15 @@ public class GoogleAuthController {
     @Value("${google.token-endpoint}")
     private String tokenEndpoint;
 
+    @Value("${google.authorization-endpoint}")
+    private String authorizationEndpoint;
+
 
     @GetMapping("/callback")
-    public ResponseEntity<?> handleGoogleCallback(@RequestParam String code, @RequestParam String role) {
+    public ResponseEntity<?> handleGoogleCallback(@RequestParam String code, @RequestParam String state) {
         try {
-            // Step 1: Exchange authorization code for token
+            String role = state;
+
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("code", code);
             params.add("client_id", clientId);
@@ -75,8 +78,6 @@ public class GoogleAuthController {
             }
 
             String idToken = (String) tokenResponse.getBody().get("id_token");
-
-            // Step 2: Extract email from ID token
             String userInfoUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
             ResponseEntity<Map> userInfoResponse = restTemplate.getForEntity(userInfoUrl, Map.class);
             if (userInfoResponse.getStatusCode() != HttpStatus.OK) {
@@ -85,38 +86,46 @@ public class GoogleAuthController {
 
             String email = (String) userInfoResponse.getBody().get("email");
 
-            // Step 3: Check if the user exists and create if not
-            if (role.equalsIgnoreCase("attendee")) {
-                Optional<Attendee> existing = Optional.ofNullable(attendeeRepository.findByEmail(email));
-                if (existing.isEmpty()) {
+            if ("attendee".equalsIgnoreCase(role)) {
+                if (attendeeRepository.findByEmail(email) == null) {
                     Attendee newUser = new Attendee();
                     newUser.setEmail(email);
                     newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
                     attendeeRepository.save(newUser);
                 }
-            } else if (role.equalsIgnoreCase("host")) {
-                Optional<Host> existing = Optional.ofNullable(hostRepository.findByEmail(email));
-                if (existing.isEmpty()) {
+            } else if ("host".equalsIgnoreCase(role)) {
+                if (hostRepository.findByEmail(email) == null) {
                     Host newUser = new Host();
                     newUser.setEmail(email);
                     newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
                     hostRepository.save(newUser);
                 }
             } else {
-                return ResponseEntity.badRequest().body("Invalid role specified");
+                return ResponseEntity.badRequest().body("Invalid role");
             }
 
-            // Step 4: Generate and return JWT
-            String jwtToken = jwtUtil.generateToken(email,role.toUpperCase()); // or include role in claims
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", jwtToken);
-            response.put("role", role.toUpperCase());
-
-            return ResponseEntity.ok(response);
+            String jwtToken = jwtUtil.generateToken(email, role.toUpperCase());
+            String redirectMobile = "myapp://auth?token=" + jwtToken + "&email=" + email + "&role=" + role;
+            return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectMobile).build();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("OAuth error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("OAuth error");
         }
     }
+
+    @GetMapping("/url")
+    public ResponseEntity<String> getGoogleOAuthUrl(@RequestParam String role) {
+        String scope = "openid email profile";
+        String authUrl = authorizationEndpoint + "?" +
+                "client_id=" + clientId +
+                "&redirect_uri=" + redirectUri +
+                "&response_type=code" +
+                "&scope=" + scope +
+                "&access_type=offline" +
+                "&prompt=consent" +
+                "&state=" + role;
+        return ResponseEntity.ok(authUrl);
+    }
+
 }
