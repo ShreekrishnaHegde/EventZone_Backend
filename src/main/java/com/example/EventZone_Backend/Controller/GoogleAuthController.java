@@ -118,7 +118,7 @@ public class GoogleAuthController {
         String scope = "openid email profile";
         String authUrl = authorizationEndpoint + "?" +
                 "client_id=" + clientId +
-                "&redirecti_uri=" + redirectUri +
+                "&redirect_uri=" + redirectUri +
                 "&response_type=code" +
                 "&scope=" + scope +
                 "&access_type=offline" +
