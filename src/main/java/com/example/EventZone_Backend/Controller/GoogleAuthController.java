@@ -46,7 +46,7 @@ public class GoogleAuthController {
     private String clientSecret;
 
     @Value("${google.redirection-uri}")
-    private String redirectionUri;
+    private String redirectUri;
 
     @Value("${google.token-endpoint}")
     private String tokenEndpoint;
@@ -64,7 +64,7 @@ public class GoogleAuthController {
             params.add("code", code);
             params.add("client_id", clientId);
             params.add("client_secret", clientSecret);
-            params.add("redirection_uri", redirectionUri);
+            params.add("redirect_uri", redirectUri);
             params.add("grant_type", "authorization_code");
 
             HttpHeaders headers = new HttpHeaders();
@@ -118,7 +118,7 @@ public class GoogleAuthController {
         String scope = "openid email profile";
         String authUrl = authorizationEndpoint + "?" +
                 "client_id=" + clientId +
-                "&redirection_uri=" + redirectionUri +
+                "&redirecti_uri=" + redirectUri +
                 "&response_type=code" +
                 "&scope=" + scope +
                 "&access_type=offline" +
