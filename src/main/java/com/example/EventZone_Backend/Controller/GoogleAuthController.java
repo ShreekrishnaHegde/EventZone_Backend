@@ -1,6 +1,5 @@
 package com.example.EventZone_Backend.Controller;
 
-import com.example.EventZone_Backend.DTO.AuthResponse;
 import com.example.EventZone_Backend.Entity.Attendee;
 import com.example.EventZone_Backend.Entity.Host;
 import com.example.EventZone_Backend.Repository.AttendeeRepository;
@@ -115,7 +114,7 @@ public class GoogleAuthController {
     }
 
     @GetMapping("/url")
-    public ResponseEntity<String> getGoogleOAuthUrl(@RequestParam String role) {
+    public ResponseEntity<Void> getGoogleOAuthUrl(@RequestParam String role) {
         String scope = "openid email profile";
         String authUrl = authorizationEndpoint + "?" +
                 "client_id=" + clientId +
@@ -125,7 +124,9 @@ public class GoogleAuthController {
                 "&access_type=offline" +
                 "&prompt=consent" +
                 "&state=" + role;
-        return ResponseEntity.ok(authUrl);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, authUrl)
+                .build();
     }
 
 }
