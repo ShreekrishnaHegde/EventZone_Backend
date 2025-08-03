@@ -76,7 +76,6 @@ public class GoogleAuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token exchange failed");
             }
 
-            assert tokenResponse.getBody() != null;
             String idToken = (String) tokenResponse.getBody().get("id_token");
             String userInfoUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
             ResponseEntity<Map> userInfoResponse = restTemplate.getForEntity(userInfoUrl, Map.class);
@@ -84,7 +83,6 @@ public class GoogleAuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid ID token");
             }
 
-            assert userInfoResponse.getBody() != null;
             String email = (String) userInfoResponse.getBody().get("email");
 
             if ("attendee".equalsIgnoreCase(role)) {
