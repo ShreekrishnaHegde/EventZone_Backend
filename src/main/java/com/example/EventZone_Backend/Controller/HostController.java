@@ -21,4 +21,5 @@ public class HostController {
     public HostProfileResponseDTO updateProfile(@RequestBody HostProfileUpdateRequestDTO request) {
         return hostService.updateProfile(request);
     }
+
 }
