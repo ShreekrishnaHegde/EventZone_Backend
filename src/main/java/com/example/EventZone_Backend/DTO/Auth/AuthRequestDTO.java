@@ -1,9 +1,9 @@
-package com.example.EventZone_Backend.DTO;
+package com.example.EventZone_Backend.DTO.Auth;
 
 import lombok.Data;
 
 @Data
-public class HostSignUpRequest {
+public class AuthRequestDTO {
     private String email;
     private String password;
 }

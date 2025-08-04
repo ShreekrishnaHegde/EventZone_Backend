@@ -1,7 +1,7 @@
 package com.example.EventZone_Backend.Controller;
 
-import com.example.EventZone_Backend.DTO.Host.HostProfileResponse;
-import com.example.EventZone_Backend.DTO.Host.HostProfileUpdateRequest;
+import com.example.EventZone_Backend.DTO.Host.HostProfileResponseDTO;
+import com.example.EventZone_Backend.DTO.Host.HostProfileUpdateRequestDTO;
 import com.example.EventZone_Backend.Service.HostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +13,12 @@ public class HostController {
     private HostService hostService;
 
     @GetMapping("/profile")
-    public HostProfileResponse getProfile() {
+    public HostProfileResponseDTO getProfile() {
         return hostService.getProfile();
     }
+
     @PutMapping("/profile/update")
-    public HostProfileResponse updateProfile(@RequestBody HostProfileUpdateRequest request) {
+    public HostProfileResponseDTO updateProfile(@RequestBody HostProfileUpdateRequestDTO request) {
         return hostService.updateProfile(request);
     }
 }
