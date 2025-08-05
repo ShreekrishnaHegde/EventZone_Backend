@@ -6,4 +6,5 @@ import lombok.Data;
 public class HostSignUpRequestDTO {
     private String email;
     private String password;
+    private String clubName;
 }

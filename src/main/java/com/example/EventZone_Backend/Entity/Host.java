@@ -18,8 +18,18 @@ public class Host {
     private String email;
     private String password;
     private String role = "ROLE_HOST";
-    private String fullname;
-    private String clubname;
+
+    private String clubName;
     private String clubDescription;
+    private String clubLogo;
+
+    private double rating;
+    private String paymentAccountId;
+    private String phoneNumber;
+    
+    private String website;
+    private String instagram;
+    private String linkedin;
+    private String twitter;
 
 }

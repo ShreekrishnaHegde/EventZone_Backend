@@ -12,11 +12,13 @@ import com.example.EventZone_Backend.Service.UserDetailsServiceImpl;
 import com.example.EventZone_Backend.utilis.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,8 +49,8 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDTO(token,attendee.getRole(),attendee.getEmail()));
     }
 
-    @PostMapping("/signup/host")
-    public ResponseEntity<?> registerHost(@RequestBody HostSignUpRequestDTO hostSignUpRequest){
+    @PostMapping(value = "/signup/host")
+    public ResponseEntity<?> registerHost(@RequestBody HostSignUpRequestDTO hostSignUpRequest) {
         Host host=hostService.register(hostSignUpRequest);
         UserDetails userDetails=userDetailsService.loadUserByUsername(host.getEmail());
         String token=jwtUtil.generateToken(userDetails.getUsername(),"HOST");

@@ -11,7 +11,6 @@ public class HostProfileResponseDTO {
     public static HostProfileResponseDTO fromEntityToThis(Host host) {
         HostProfileResponseDTO dto = new HostProfileResponseDTO();
         dto.setEmail(host.getEmail());
-        dto.setFullname(host.getFullname());
         return dto;
     }
 }
