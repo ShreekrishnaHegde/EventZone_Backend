@@ -8,6 +8,7 @@ import com.example.EventZone_Backend.DTO.Auth.HostSignUpRequestDTO;
 import com.example.EventZone_Backend.Entity.Host;
 import com.example.EventZone_Backend.Repository.HostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,29 +44,39 @@ public class HostService {
         return HostProfileResponseDTO.fromEntityToThis(host);
     }
     //to update the profile
-    public HostProfileResponseDTO updateProfile(HostProfileUpdateRequestDTO request, MultipartFile logo) {
+    public HostProfileResponseDTO updateProfile(HostProfileUpdateRequestDTO request, MultipartFile logo) throws IOException {
         String email = getCurrentUserEmail();
         Host host = hostRepository.findByEmail(email);
-        host.setClubName(request.getClubName());
-        host.setClubDescription(request.getClubDescription());
-        host.setPhoneNumber(request.getPhoneNumber());
-        host.setWebsite(request.getWebsite());
-        host.setInstagram(request.getInstagram());
-        host.setLinkedin(request.getLinkedin());
-        host.setClubLogo(request.getClubLogo());
-        if (logo != null && !logo.isEmpty()) {
-            try {
-                Map uploadResult = cloudinary.uploader().upload(logo.getBytes(), ObjectUtils.emptyMap());
-                String logoUrl = (String) uploadResult.get("secure_url");
-                request.setClubLogo(logoUrl);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to upload logo", e);
-            }
+
+        if (logo != null && host.getClubLogo() != null) {
+            deleteImageFromCloudinary(host.getLogoPublicId());
         }
+        if (logo != null && !logo.isEmpty()) {
+            Map uploadResult = cloudinary.uploader().upload(logo.getBytes(), ObjectUtils.emptyMap());
+            host.setClubLogo((String) uploadResult.get("secure_url"));
+            host.setLogoPublicId((String) uploadResult.get("public_id"));
+        }
+        HostProfileUpdateRequestDTO.fromEntityToThis(host);
         hostRepository.save(host);
         return HostProfileResponseDTO.fromEntityToThis(host);
     }
 
+    public ResponseEntity<?> deleteLogo(){
+        String email=getCurrentUserEmail();
+        Host host=hostRepository.findByEmail(email);
+        String url=host.getClubLogo();
+        deleteImageFromCloudinary(url);
+        host.setClubLogo(null);
+        return null;
+    }
+    public void deleteImageFromCloudinary(String publicId) {
+        try {
+            Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            System.out.println("Deleted from Cloudinary: " + result);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete image from Cloudinary", e);
+        }
+    }
     private String getCurrentUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }

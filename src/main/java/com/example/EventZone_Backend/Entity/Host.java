@@ -22,6 +22,7 @@ public class Host {
     private String clubName;
     private String clubDescription;
     private String clubLogo;
+    private String logoPublicId;
 
     private double rating;
     private String paymentAccountId;

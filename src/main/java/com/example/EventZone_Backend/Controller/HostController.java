@@ -5,8 +5,11 @@ import com.example.EventZone_Backend.DTO.Host.HostProfileUpdateRequestDTO;
 import com.example.EventZone_Backend.Service.HostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/host")
@@ -23,8 +26,15 @@ public class HostController {
     public HostProfileResponseDTO updateProfile(
             @RequestPart("data") HostProfileUpdateRequestDTO request,
             @RequestPart(value = "logo",required = false)MultipartFile logoFile
-            ) {
+            ) throws IOException {
         return hostService.updateProfile(request,logoFile);
     }
+
+
+    @DeleteMapping(value = "/profile/logo")
+    public ResponseEntity<?> deleteProfileLogo(){
+        return hostService.deleteLogo();
+    }
+
 
 }

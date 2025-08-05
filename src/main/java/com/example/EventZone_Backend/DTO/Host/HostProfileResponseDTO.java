@@ -9,6 +9,7 @@ public class HostProfileResponseDTO {
     private String clubName;
     private String clubDescription;
     private String phoneNumber;
+    private String clubLogo;
     private String website;
     private String instagram;
     private String linkedin;
@@ -22,6 +23,7 @@ public class HostProfileResponseDTO {
         dto.setInstagram(host.getInstagram());
         dto.setWebsite(host.getWebsite());
         dto.setPhoneNumber(host.getPhoneNumber());
+        dto.setClubLogo(host.getClubLogo());
         return dto;
     }
 }
