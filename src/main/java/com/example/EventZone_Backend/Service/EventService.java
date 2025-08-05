@@ -1,9 +1,10 @@
 package com.example.EventZone_Backend.Service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.EventZone_Backend.DTO.Event.EventCreateRequestDTO;
 import com.example.EventZone_Backend.DTO.Event.EventResponseDTO;
 import com.example.EventZone_Backend.DTO.Event.EventUpdateRequestDTO;
-import com.example.EventZone_Backend.Entity.Attendee;
 import com.example.EventZone_Backend.Entity.Event;
 import com.example.EventZone_Backend.Entity.Host;
 import com.example.EventZone_Backend.Repository.EventRepository;
@@ -11,9 +12,11 @@ import com.example.EventZone_Backend.Repository.HostRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.MultipartFilter;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EventService {
@@ -21,7 +24,8 @@ public class EventService {
     private EventRepository eventRepository;
     @Autowired
     private HostRepository hostRepository;
-
+    @Autowired
+    private Cloudinary cloudinary;
     //to create an event
     public EventResponseDTO createEvent(String email, EventCreateRequestDTO request){
         Host host=hostRepository.findByEmail(email);
@@ -46,5 +50,11 @@ public class EventService {
         event.setDate(req.getDate());
         return EventResponseDTO.fromEntityToThis(eventRepository.save(event));
     }
+    //image upload service
+    public String uploadImage(MultipartFile file) throws Exception{
+        Map uploadResult=cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        return (String) uploadResult.get("secure_url");
+    }
+
 
 }

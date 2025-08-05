@@ -21,12 +21,12 @@ public class Event {
     private String description;
     private LocalDate date;
 
-    private String hostName;
-
-    private String eventPoster;
-
-    private String  eventPosterUrl;
-    private LocalDateTime lastDateToRegister;
-    private int numberOfSlots;
-    private List<ObjectId> participants=new ArrayList<>();
+//    private String hostName;
+//
+//    private String eventPoster;
+//
+//    private String  eventPosterUrl;
+//    private LocalDateTime lastDateToRegister;
+//    private int numberOfSlots;
+//    private List<ObjectId> participants=new ArrayList<>();
 }

@@ -19,5 +19,7 @@ public class Host {
     private String password;
     private String role = "ROLE_HOST";
     private String fullname;
-    
+    private String clubname;
+    private String clubDescription;
+
 }

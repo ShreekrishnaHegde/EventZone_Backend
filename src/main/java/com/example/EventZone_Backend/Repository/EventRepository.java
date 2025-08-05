@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends MongoRepository<Event, ObjectId> {
-    List<Event> findByHost(Host host);
+//    List<Event> findByHost(Host host);
 }
