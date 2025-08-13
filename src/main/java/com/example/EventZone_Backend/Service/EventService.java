@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MultipartFilter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,13 +27,20 @@ public class EventService {
     private HostRepository hostRepository;
     @Autowired
     private Cloudinary cloudinary;
+
     //to create an event
-    public EventResponseDTO createEvent(String email, EventCreateRequestDTO request){
+    public EventResponseDTO createEvent(String email, EventCreateRequestDTO request,MultipartFile imageFile) throws IOException {
         Host host=hostRepository.findByEmail(email);
-        Event event=new Event();
-        event.setTitle(request.getTitle());
-        event.setDescription(request.getDescription());
-        event.setDate(request.getDate());
+        if (host==null){
+            throw new RuntimeException("Host Not Found with email"+ email);
+        }
+        Event event=request.toEntity();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
+            event.setEventImage((String) uploadResult.get("secure_url"));
+            event.setEventImagePublicId((String) uploadResult.get("public_id"));
+        }
+        eventRepository.save(event);
         return EventResponseDTO.fromEntityToThis(event);
     }
 
