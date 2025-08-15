@@ -20,8 +20,13 @@ public class Event {
     private String title;
     private String description;
     private LocalDate date;
+    private String location;
+    private String time;
 
-//    private String hostName;
+    private String host;
+
+    private String eventImage;
+    private String eventImagePublicId;
 //
 //    private String eventPoster;
 //

@@ -7,9 +7,13 @@ import com.example.EventZone_Backend.DTO.Event.EventUpdateRequestDTO;
 import com.example.EventZone_Backend.Service.EventService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,10 +22,12 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping
-    public EventResponseDTO createEvent(@RequestBody EventCreateRequestDTO requestDTO){
-        String email= SecurityContextHolder.getContext().getAuthentication().getName();
-        return eventService.createEvent(email, requestDTO);
+    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public EventResponseDTO createEvent(
+            @RequestPart("data") EventCreateRequestDTO requestDTO,
+            @RequestPart(value = "image",required = false)MultipartFile imageFile
+    ) throws IOException {
+        return eventService.createEvent(requestDTO,imageFile);
     }
 
     @GetMapping
