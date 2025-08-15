@@ -27,8 +27,7 @@ public class EventController {
             @RequestPart("data") EventCreateRequestDTO requestDTO,
             @RequestPart(value = "image",required = false)MultipartFile imageFile
     ) throws IOException {
-        String email= SecurityContextHolder.getContext().getAuthentication().getName();
-        return eventService.createEvent(email, requestDTO,imageFile);
+        return eventService.createEvent(requestDTO,imageFile);
     }
 
     @GetMapping

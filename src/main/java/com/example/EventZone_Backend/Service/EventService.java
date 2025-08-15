@@ -11,6 +11,7 @@ import com.example.EventZone_Backend.Repository.EventRepository;
 import com.example.EventZone_Backend.Repository.HostRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MultipartFilter;
@@ -29,7 +30,8 @@ public class EventService {
     private Cloudinary cloudinary;
 
     //to create an event
-    public EventResponseDTO createEvent(String email, EventCreateRequestDTO request,MultipartFile imageFile) throws IOException {
+    public EventResponseDTO createEvent(EventCreateRequestDTO request,MultipartFile imageFile) throws IOException {
+        String email=getCurrentUserEmail();
         Host host=hostRepository.findByEmail(email);
         if (host==null){
             throw new RuntimeException("Host Not Found with email"+ email);
@@ -62,6 +64,10 @@ public class EventService {
     public String uploadImage(MultipartFile file) throws Exception{
         Map uploadResult=cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
         return (String) uploadResult.get("secure_url");
+    }
+
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 
