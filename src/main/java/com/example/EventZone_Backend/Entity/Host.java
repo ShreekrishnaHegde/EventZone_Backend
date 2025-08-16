@@ -34,10 +34,7 @@ public class Host {
     private String logoUrl;
     private String logoPublicId;
 
-    @DecimalMin("0.0")
-    @DecimalMax("5.0")
-    private BigDecimal rating;
-    private String paymentAccountId;
+
     private String phoneNumber;
 
     @URL(protocol = "https")

@@ -45,7 +45,12 @@ public class AttendeeController {
     }
     @DeleteMapping("/profile/profilePhoto")
     public ResponseEntity<?> deleteProfilePhoto(){
-        attendeeService.deleteProfilePhoto();
-        return ResponseEntity.ok("Logo Deleted Successfully");
+        try{
+            attendeeService.deleteProfilePhoto();
+            return ResponseEntity.ok("Logo Deleted Successfully");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error:"+e.getMessage());
+        }
     }
 }
