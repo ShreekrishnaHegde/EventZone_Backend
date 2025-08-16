@@ -19,9 +19,9 @@ public class AttendeeProfileResponseDTO {
         AttendeeProfileResponseDTO dto=new AttendeeProfileResponseDTO();
         dto.setEmail(attendee.getEmail());
         dto.setImageUrl(attendee.getImageUrl());
-        dto.setFullname(attendee.getFullname());
+        dto.setFullname(attendee.getFullName());
         dto.setBranchName(attendee.getBranchName());
-        dto.setUSN(attendee.getUSN());
+        dto.setUSN(attendee.getUsn());
         return dto;
     }
 }

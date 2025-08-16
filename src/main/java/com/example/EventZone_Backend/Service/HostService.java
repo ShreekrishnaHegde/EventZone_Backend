@@ -34,7 +34,7 @@ public class HostService {
         Host host=new Host();
         host.setEmail(request.getEmail());
         host.setPassword(request.getPassword());
-        host.setClubName(request.getClubName());
+        host.setName(request.getClubName());
         return hostRepository.save(host);
     }
     //to fetch the profile
@@ -48,12 +48,12 @@ public class HostService {
         String email = getCurrentUserEmail();
         Host host = hostRepository.findByEmail(email);
 
-        if (logo != null && host.getClubLogo() != null) {
+        if (logo != null && host.getLogoUrl() != null) {
             deleteImageFromCloudinary(host.getLogoPublicId());
         }
         if (logo != null && !logo.isEmpty()) {
             Map uploadResult = cloudinary.uploader().upload(logo.getBytes(), ObjectUtils.emptyMap());
-            host.setClubLogo((String) uploadResult.get("secure_url"));
+            host.setLogoUrl((String) uploadResult.get("secure_url"));
             host.setLogoPublicId((String) uploadResult.get("public_id"));
         }
         HostProfileUpdateRequestDTO.fromEntityToThis(host);
@@ -64,9 +64,9 @@ public class HostService {
     public ResponseEntity<?> deleteLogo(){
         String email=getCurrentUserEmail();
         Host host=hostRepository.findByEmail(email);
-        String url=host.getClubLogo();
+        String url=host.getLogoUrl();
         deleteImageFromCloudinary(url);
-        host.setClubLogo(null);
+        host.setLogoUrl(null);
         return null;
     }
     public void deleteImageFromCloudinary(String publicId) {
