@@ -6,6 +6,7 @@ import com.example.EventZone_Backend.DTO.Attendee.AttendeeProfileResponseDTO;
 import com.example.EventZone_Backend.DTO.Attendee.AttendeeProfileUpdateRequestDTO;
 import com.example.EventZone_Backend.DTO.Auth.AttendeeSignUpRequestDTO;
 import com.example.EventZone_Backend.Entity.Attendee;
+import com.example.EventZone_Backend.Mapper.AttendeeMapper;
 import com.example.EventZone_Backend.Repository.AttendeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,9 +30,8 @@ public class AttendeeService {
 
     //signup
     public Attendee register(AttendeeSignUpRequestDTO request){
-        Attendee attendee=new Attendee();
-        attendee.setEmail(request.getEmail());
-        attendee.setPassword(request.getPassword());
+        Attendee attendee= AttendeeMapper.toEntity(request);
+        attendee.setPassword(passwordEncoder.encode(request.getPassword()));
         return attendeeRepository.save(attendee);
     }
 
