@@ -9,4 +9,7 @@ public class EventUpdateRequestDTO {
     private String title;
     private String description;
     private LocalDate date;
+    private String location;
+    private String time;
+    private Integer capacity;
 }

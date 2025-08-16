@@ -7,6 +7,7 @@ import com.example.EventZone_Backend.DTO.Event.EventResponseDTO;
 import com.example.EventZone_Backend.DTO.Event.EventUpdateRequestDTO;
 import com.example.EventZone_Backend.Entity.Event;
 import com.example.EventZone_Backend.Entity.Host;
+import com.example.EventZone_Backend.Mapper.EventMapper;
 import com.example.EventZone_Backend.Repository.EventRepository;
 import com.example.EventZone_Backend.Repository.HostRepository;
 import org.bson.types.ObjectId;
@@ -36,7 +37,7 @@ public class EventService {
         if (host==null){
             throw new RuntimeException("Host Not Found with email"+ email);
         }
-        Event event=request.toEntity();
+        Event event= EventMapper.toEntity(request,host);
         if (imageFile != null && !imageFile.isEmpty()) {
             Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
             event.setEventImage((String) uploadResult.get("secure_url"));

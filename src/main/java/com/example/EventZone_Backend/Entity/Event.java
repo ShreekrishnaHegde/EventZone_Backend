@@ -28,7 +28,7 @@ public class Event {
 
     private String host;
 
-    private String eventImage;
+    private String eventImageUrl;
     private String eventImagePublicId;
 
     private Integer capacity;
