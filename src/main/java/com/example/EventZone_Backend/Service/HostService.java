@@ -6,6 +6,7 @@ import com.example.EventZone_Backend.DTO.Host.HostProfileResponseDTO;
 import com.example.EventZone_Backend.DTO.Host.HostProfileUpdateRequestDTO;
 import com.example.EventZone_Backend.DTO.Auth.HostSignUpRequestDTO;
 import com.example.EventZone_Backend.Entity.Host;
+import com.example.EventZone_Backend.Mapper.HostMapper;
 import com.example.EventZone_Backend.Repository.HostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,8 @@ public class HostService {
 
     //signup
     public Host register(HostSignUpRequestDTO request){
-        Host host=new Host();
-        host.setEmail(request.getEmail());
-        host.setPassword(request.getPassword());
-        host.setName(request.getClubName());
+        Host host= HostMapper.toEntity(request);
+        host.setPassword(passwordEncoder.encode(request.getPassword()));
         return hostRepository.save(host);
     }
     //to fetch the profile

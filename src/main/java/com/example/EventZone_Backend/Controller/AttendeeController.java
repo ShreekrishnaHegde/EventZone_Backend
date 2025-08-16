@@ -43,6 +43,9 @@ public class AttendeeController {
         }
         return ResponseEntity.ok(updatedProfile);
     }
-
-
+    @DeleteMapping("/profile/profilePhoto")
+    public ResponseEntity<?> deleteProfilePhoto(){
+        attendeeService.deleteProfilePhoto();
+        return ResponseEntity.ok("Logo Deleted Successfully");
+    }
 }

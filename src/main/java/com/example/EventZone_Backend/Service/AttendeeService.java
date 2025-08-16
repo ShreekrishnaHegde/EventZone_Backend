@@ -39,9 +39,8 @@ public class AttendeeService {
     public AttendeeProfileResponseDTO getProfile(){
         String email=getCurrentUserEmail();
         Attendee attendee=attendeeRepository.findByEmail(email);
-        return AttendeeProfileResponseDTO.fromEntityToThis(attendee);
+        return AttendeeMapper.toAttendeeProfileResponseDTO(attendee);
     }
-
     //to update the profile
     public AttendeeProfileResponseDTO updateProfile(AttendeeProfileUpdateRequestDTO requestDTO, MultipartFile image) throws Exception {
         String email=getCurrentUserEmail();
@@ -49,19 +48,43 @@ public class AttendeeService {
         if (attendee == null) {
             throw new Exception("Attendee not found with email: " + email);
         }
-
+        //if image already exists; then delete the old image then add the new image.
         if(image!=null && attendee.getImageUrl()!=null){
-
+            deleteImageFromCloudinary(attendee.getImagePublicId());
         }
         if(image!=null && !image.isEmpty()){
             Map uploadResult=cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
             attendee.setImageUrl((String)uploadResult.get("secure_url"));
             attendee.setImagePublicId((String)uploadResult.get("public_id"));
         }
-        requestDTO.applyUpdatesTo(attendee);
+        AttendeeMapper.applyUpdates(requestDTO,attendee);
         attendeeRepository.save(attendee);
-        return AttendeeProfileResponseDTO.fromEntityToThis(attendee);
+        return AttendeeMapper.toAttendeeProfileResponseDTO(attendee);
+    }
+    //to delete profile photo
+    public void deleteProfilePhoto(){
+        String email=getCurrentUserEmail();
+        Attendee attendee=attendeeRepository.findByEmail(email);
+        if(attendee==null){
+            throw new RuntimeException("Attendee with email "+email+" not found");
+        }
+        String publicId= attendee.getImagePublicId();
+        if(publicId!=null){
+            deleteImageFromCloudinary(publicId);
+            attendee.setImagePublicId(null);
+            attendee.setImageUrl(null);
+            attendeeRepository.save(attendee);
+        }
+    }
 
+    //Helper Services
+    public void deleteImageFromCloudinary(String publicId){
+        try{
+            Map result=cloudinary.uploader().destroy(publicId,ObjectUtils.emptyMap());
+        }
+        catch(IOException e){
+            throw new RuntimeException("Failed to delete image from the cloudinary");
+        }
     }
     private String getCurrentUserEmail(){
         return SecurityContextHolder.getContext().getAuthentication().getName();
