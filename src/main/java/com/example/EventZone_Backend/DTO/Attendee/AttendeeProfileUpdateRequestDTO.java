@@ -5,12 +5,25 @@ import lombok.Data;
 
 @Data
 public class AttendeeProfileUpdateRequestDTO {
-    private String email;
 
+    private String fullname;
+    private String collegeName;
+    private String USN;
+    private String branchName;
 
     public void applyUpdatesTo(Attendee attendee) {
-        if (this.email != null) {
-            attendee.setEmail(this.email);
+        if (this.fullname != null) {
+            attendee.setEmail(this.fullname);
         }
+        if (this.collegeName != null) {
+            attendee.setEmail(this.collegeName);
+        }
+        if (this.branchName != null) {
+            attendee.setEmail(this.branchName);
+        }
+        if (this.USN != null) {
+            attendee.setEmail(this.USN);
+        }
+
     }
 }
