@@ -5,19 +5,13 @@ import com.example.EventZone_Backend.DTO.Event.EventCreateRequestDTO;
 import com.example.EventZone_Backend.DTO.Event.EventResponseDTO;
 import com.example.EventZone_Backend.DTO.Event.EventUpdateRequestDTO;
 import com.example.EventZone_Backend.Service.EventService;
-import org.apache.catalina.connector.Response;
-import org.apache.http.protocol.HTTP;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.standard.Media;
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 

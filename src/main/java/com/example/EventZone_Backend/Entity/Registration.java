@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.List;
 
 @Document(collection = "EventRegistration")
 @Data
@@ -18,6 +19,8 @@ public class Registration {
     private ObjectId hostId;
     @Indexed
     private ObjectId eventId;
+    @Indexed
+    private ObjectId attendeeId;
     @CreatedDate
     private Instant createdAt;
 }
