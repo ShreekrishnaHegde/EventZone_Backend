@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface EventRepository extends MongoRepository<Event, ObjectId> {
     Page<Event> findByHostId(ObjectId hostId, Pageable pageable);
+    Optional<Event> findByPublicId(String publicId);
 }

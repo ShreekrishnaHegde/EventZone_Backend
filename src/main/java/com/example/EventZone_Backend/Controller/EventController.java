@@ -40,14 +40,20 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to create the event");
         }
     }
-//    @PutMapping(value = "/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<?> updateEvent(
-//            @PathVariable
-//            @RequestPart("data") EventUpdateRequestDTO requestDTO,
-//            @RequestPart(value = "image",required = false) MultipartFile imageFile
-//    ){
-//        EventResponseDTO responseDTO=eventService.updateEvent(requestDTO,imageFile);
-//    }
+    @PutMapping(value = "/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateEvent(
+            @PathVariable String publicId,
+            @RequestPart("data") EventUpdateRequestDTO requestDTO,
+            @RequestPart(value = "image",required = false) MultipartFile imageFile
+    ){
+        try{
+            EventResponseDTO responseDTO=eventService.updateEvent(publicId,requestDTO,imageFile);
+            return ResponseEntity.ok(responseDTO);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
 
     @GetMapping
     public List<EventResponseDTO> list() {

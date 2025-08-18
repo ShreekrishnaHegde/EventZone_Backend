@@ -36,4 +36,22 @@ public class EventMapper {
         responseDTO.setEventImageUrl(event.getEventImageUrl());
         return responseDTO;
     }
+    public static void applyUpdates(EventUpdateRequestDTO requestDTO,Event event){
+        if(requestDTO.getTitle()!=null){
+            event.setTitle(requestDTO.getTitle());
+        }
+        if(requestDTO.getDescription()!=null){
+            event.setDescription(requestDTO.getDescription());
+        }
+        if(requestDTO.getDate()!=null){
+            event.setDate(requestDTO.getDate());
+        }
+        if(requestDTO.getTime()!=null){
+            event.setTime(requestDTO.getTime());
+        }
+        if(requestDTO.getLocation()!=null){
+            event.setLocation(requestDTO.getLocation());
+        }
+        event.setCapacity(requestDTO.getCapacity());
+    }
 }

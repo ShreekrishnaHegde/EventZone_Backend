@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HostRepository extends MongoRepository<Host, ObjectId> {
     Host findByEmail(String email);
+
 }

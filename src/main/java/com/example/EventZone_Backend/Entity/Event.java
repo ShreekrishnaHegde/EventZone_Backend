@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Document(collection = "Event")
 @Data
@@ -20,6 +21,8 @@ public class Event {
     @Indexed
     private ObjectId hostId;
 
+    @Indexed(unique = true)
+    private String publicId=UUID.randomUUID().toString();
     private String title;
     private String description;
     private LocalDate date;
