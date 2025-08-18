@@ -28,7 +28,7 @@ public class RegistrationService {
         }
         Event event=eventRepository.findByPublicId(publicId)
                 .orElseThrow(()->new RuntimeException("Event Not Found with this id"));
-        Optional<Registration> existing=registrationRepository.findByEventId(event.getId());
+        Optional<Registration> existing=registrationRepository.findByEventIdAndAttendeeId(event.getId(),attendee.getId());
         if(existing.isPresent()){
             throw new Exception("Attendee Already exists with the email");
         }
@@ -36,12 +36,20 @@ public class RegistrationService {
         registration.setHostId(event.getHostId());
         registration.setEventId(event.getId());
         registration.setAttendeeId(attendee.getId());
+        registration.setName(attendee.getFullName());
+        registration.setCollege(attendee.getCollegeName());
+        registration.setBranch(attendee.getBranchName());
+        registration.setUsn(attendee.getUsn());
         registrationRepository.save(registration);
     }
-    public void getAllRegistrations(String publicId){
+    public List<Registration> getAllRegistrations(String publicId){
         Event event=eventRepository.findByPublicId(publicId)
                 .orElseThrow(()->new RuntimeException("Event Not Found with this id"));
-
+        List<Registration> registrations=registrationRepository.findByEventId(event.getId());
+        if (registrations.isEmpty()) {
+            throw new RuntimeException("No registrations found for eventId");
+        }
+        return registrations;
     }
     //helper methods
     private String getCurrentUserEmail() {

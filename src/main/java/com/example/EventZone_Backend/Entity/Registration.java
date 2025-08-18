@@ -23,4 +23,9 @@ public class Registration {
     private ObjectId attendeeId;
     @CreatedDate
     private Instant createdAt;
+
+    private String name;
+    private String college;
+    private String branch;
+    private String usn;
 }
