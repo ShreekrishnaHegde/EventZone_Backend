@@ -9,6 +9,7 @@ import com.example.EventZone_Backend.Entity.Host;
 public class EventMapper {
     public static Event toEntity(EventCreateRequestDTO requestDTO, Host host){
         Event event=new Event();
+        event.setHostId(host.getId());
         event.setTitle(requestDTO.getTitle());
         event.setDescription(requestDTO.getDescription());
         event.setDate(requestDTO.getDate());

@@ -41,7 +41,7 @@ public class EventController {
         }
     }
     @PutMapping(value = "/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateEvent(
+    public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable String publicId,
             @RequestPart("data") EventUpdateRequestDTO requestDTO,
             @RequestPart(value = "image",required = false) MultipartFile imageFile
@@ -52,12 +52,16 @@ public class EventController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
     }
-
-    @GetMapping
-    public List<EventResponseDTO> list() {
-        return eventService.getEvents();
+    //to get event of a particular host
+    @GetMapping("/events")
+    public ResponseEntity<List<EventResponseDTO>> list() throws Exception {
+        try{
+            List<EventResponseDTO> events=eventService.getEvents();
+            return ResponseEntity.ok(events);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.support.MultipartFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -48,10 +49,23 @@ public class EventService {
     }
 
     //to get all events for a host
-    public List<EventResponseDTO> getEvents(){
-        return eventRepository.findAll().stream().map(
-                EventResponseDTO::fromEntityToThis
-        ).toList();
+    public List<EventResponseDTO> getEvents() throws Exception {
+        String email=getCurrentUserEmail();
+        Host host=hostRepository.findByEmail(email);
+        ObjectId hostId=host.getId();
+        List<Event> events;
+        try{
+            events=eventRepository.findByHostIdOrderByDateAsc(hostId);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Failed to evets for the hostid ",e);
+        }
+        if(events==null || events.isEmpty()){
+            throw new Exception("No events ");
+        }
+        return events.stream()
+                .map(EventMapper::toEventResponseDTO)
+                .collect(Collectors.toList());
     }
     // to update an event
     public EventResponseDTO updateEvent(String publicId,EventUpdateRequestDTO req,MultipartFile imageFile) throws IOException {
