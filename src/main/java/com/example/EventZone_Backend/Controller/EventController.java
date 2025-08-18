@@ -5,7 +5,7 @@ import com.example.EventZone_Backend.DTO.Event.EventCreateRequestDTO;
 import com.example.EventZone_Backend.DTO.Event.EventResponseDTO;
 import com.example.EventZone_Backend.DTO.Event.EventUpdateRequestDTO;
 import com.example.EventZone_Backend.Service.EventService;
-import org.apache.coyote.Response;
+import org.apache.catalina.connector.Response;
 import org.apache.http.protocol.HTTP;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +56,15 @@ public class EventController {
     //to get event of a particular host
     @GetMapping("/events")
     public ResponseEntity<List<EventResponseDTO>> list() throws Exception {
-        try{
-            List<EventResponseDTO> events=eventService.getEvents();
-            return ResponseEntity.ok(events);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        List<EventResponseDTO> events=eventService.getEvents();
+        return ResponseEntity.ok(events);
+    }
+    //to get all the events
+    @GetMapping("/getAllEvents")
+    public ResponseEntity<List<EventResponseDTO>> allEvents() throws Exception {
+        List<EventResponseDTO> events=eventService.getAll();
+        return ResponseEntity.ok(events);
+
     }
 
 }

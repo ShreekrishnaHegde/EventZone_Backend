@@ -83,10 +83,21 @@ public class EventService {
         eventRepository.save(event);
         return EventMapper.toEventResponseDTO(event);
     }
-    //image upload service
-    public String uploadImage(MultipartFile file) throws Exception{
-        Map uploadResult=cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return (String) uploadResult.get("secure_url");
+
+    //get all events for the attendees
+    public List<EventResponseDTO> getAll() throws Exception {
+        List<Event> events;
+        try{
+            events=eventRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve events",e);
+        }
+        if(events==null || events.isEmpty()){
+            throw new Exception("No events ");
+        }
+        return events.stream()
+                .map(EventMapper::toEventResponseDTO)
+                .collect(Collectors.toList());
     }
     //helper methods
     public void deleteImageFromCloudinary(String publicId) {
