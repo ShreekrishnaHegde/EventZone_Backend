@@ -10,18 +10,8 @@ public class AttendeeProfileResponseDTO {
     private String imageUrl;
     private String imagePublicId;
 
-    private String fullname;
+    private String fullName;
     private String collegeName;
-    private String USN;
+    private String usn;
     private String branchName;
-
-    public static AttendeeProfileResponseDTO fromEntityToThis(Attendee attendee){
-        AttendeeProfileResponseDTO dto=new AttendeeProfileResponseDTO();
-        dto.setEmail(attendee.getEmail());
-        dto.setImageUrl(attendee.getImageUrl());
-        dto.setFullname(attendee.getFullname());
-        dto.setBranchName(attendee.getBranchName());
-        dto.setUSN(attendee.getUSN());
-        return dto;
-    }
 }

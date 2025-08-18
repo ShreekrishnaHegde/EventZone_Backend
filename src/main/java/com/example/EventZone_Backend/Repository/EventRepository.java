@@ -1,15 +1,18 @@
 package com.example.EventZone_Backend.Repository;
 
-import com.example.EventZone_Backend.Entity.Attendee;
 import com.example.EventZone_Backend.Entity.Event;
-import com.example.EventZone_Backend.Entity.Host;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Repository
 public interface EventRepository extends MongoRepository<Event, ObjectId> {
-//    List<Event> findByHost(Host host);
+    List<Event> findByHostIdOrderByDateAsc(ObjectId hostId);
+    Optional<Event> findByPublicId(String publicId);
 }

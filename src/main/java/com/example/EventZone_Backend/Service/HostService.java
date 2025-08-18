@@ -5,7 +5,9 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.EventZone_Backend.DTO.Host.HostProfileResponseDTO;
 import com.example.EventZone_Backend.DTO.Host.HostProfileUpdateRequestDTO;
 import com.example.EventZone_Backend.DTO.Auth.HostSignUpRequestDTO;
+import com.example.EventZone_Backend.Entity.Attendee;
 import com.example.EventZone_Backend.Entity.Host;
+import com.example.EventZone_Backend.Mapper.HostMapper;
 import com.example.EventZone_Backend.Repository.HostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,48 +33,54 @@ public class HostService {
 
     //signup
     public Host register(HostSignUpRequestDTO request){
-        Host host=new Host();
-        host.setEmail(request.getEmail());
-        host.setPassword(request.getPassword());
-        host.setClubName(request.getClubName());
+        Host host= HostMapper.toEntity(request);
+        host.setPassword(passwordEncoder.encode(request.getPassword()));
         return hostRepository.save(host);
     }
     //to fetch the profile
     public HostProfileResponseDTO getProfile() {
         String email = getCurrentUserEmail();
         Host host = hostRepository.findByEmail(email);
-        return HostProfileResponseDTO.fromEntityToThis(host);
+        return HostMapper.toHostProfileResponseDTO(host);
     }
     //to update the profile
-    public HostProfileResponseDTO updateProfile(HostProfileUpdateRequestDTO request, MultipartFile logo) throws IOException {
+    public HostProfileResponseDTO updateProfile(HostProfileUpdateRequestDTO request, MultipartFile logo) throws Exception {
         String email = getCurrentUserEmail();
         Host host = hostRepository.findByEmail(email);
-
-        if (logo != null && host.getClubLogo() != null) {
+        if(host==null){
+            throw new Exception("Host not found with email "+email);
+        }
+        //if image already exists; then delete the old image then add the new image.
+        if (logo != null && host.getLogoUrl() != null) {
             deleteImageFromCloudinary(host.getLogoPublicId());
         }
         if (logo != null && !logo.isEmpty()) {
             Map uploadResult = cloudinary.uploader().upload(logo.getBytes(), ObjectUtils.emptyMap());
-            host.setClubLogo((String) uploadResult.get("secure_url"));
+            host.setLogoUrl((String) uploadResult.get("secure_url"));
             host.setLogoPublicId((String) uploadResult.get("public_id"));
         }
-        HostProfileUpdateRequestDTO.fromEntityToThis(host);
+        HostMapper.applyUpdates(request,host);
         hostRepository.save(host);
-        return HostProfileResponseDTO.fromEntityToThis(host);
+        return HostMapper.toHostProfileResponseDTO(host);
     }
-
-    public ResponseEntity<?> deleteLogo(){
+    //to delete profile photo
+    public void deleteProfilePhoto(){
         String email=getCurrentUserEmail();
         Host host=hostRepository.findByEmail(email);
-        String url=host.getClubLogo();
-        deleteImageFromCloudinary(url);
-        host.setClubLogo(null);
-        return null;
+        if(host==null){
+            throw new RuntimeException("Host not email "+email+" not found");
+        }
+        String publicId= host.getLogoPublicId();
+        if(publicId!=null){
+            deleteImageFromCloudinary(publicId);
+            host.setLogoPublicId(null);
+            host.setLogoUrl(null);
+            hostRepository.save(host);
+        }
     }
     public void deleteImageFromCloudinary(String publicId) {
         try {
             Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-            System.out.println("Deleted from Cloudinary: " + result);
         } catch (IOException e) {
             throw new RuntimeException("Failed to delete image from Cloudinary", e);
         }
