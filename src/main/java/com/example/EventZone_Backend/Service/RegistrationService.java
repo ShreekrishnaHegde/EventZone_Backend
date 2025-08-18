@@ -8,11 +8,13 @@ import com.example.EventZone_Backend.Repository.EventRepository;
 import com.example.EventZone_Backend.Repository.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RegistrationService {
     @Autowired
     private RegistrationRepository registrationRepository;
